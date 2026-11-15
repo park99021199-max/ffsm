@@ -13,7 +13,7 @@ function el(t,cls,txt){const x=document.createElement(t);if(cls)x.className=cls;
 function btn(txt,fn,cls='btn'){const x=el('button',cls,txt);x.type='button';x.onclick=fn;return x}
 function go(...a){location.hash=a.join('/');if(location.hash.slice(1)===a.join('/'))readRoute();window.scrollTo(0,0)}
 function readRoute(){const a=location.hash.slice(1).split('/').filter(Boolean).map(Number);route=a.length<=3&&a.every((n,i)=>Number.isInteger(n)&&n>=1&&n<=[6,10,6][i])?a:[];render();document.getElementById('screen-state')?.focus({preventScroll:true});window.scrollTo(0,0)}
-function tile(title,sub,fn){const x=btn('',fn,'tile');x.dataset.pending=String(/준비|0 \/ /.test(sub));x.append(el('strong','',title),el('small','',sub));return x}
+function tile(title,sub,fn){const x=btn('',fn,'tile');x.dataset.pending=String(/준비|^0 \/ /.test(sub));x.append(el('strong','',title),el('small','',sub));return x}
 function count(v,p){return Object.keys(DATA.chapters).filter(k=>k.startsWith(`${v}-`+(p?`${p}-`:''))).length}
 function progress(parent,n,total,label){const b=el('div','progress'),i=el('i');i.style.width=`${Math.min(100,n/total*100)}%`;b.setAttribute('role','progressbar');b.setAttribute('aria-label',label);b.setAttribute('aria-valuenow',n);b.setAttribute('aria-valuemax',total);b.append(i);parent.append(b)}
 function breadcrumb(){crumb.replaceChildren(btn('전체 도서관',()=>go()));route.forEach((n,i)=>{crumb.append(document.createTextNode('›'),btn(`제${n}${['권','부','장'][i]}`,()=>go(...route.slice(0,i+1))))})}
