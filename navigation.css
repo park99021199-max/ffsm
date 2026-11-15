@@ -1,4 +1,5 @@
 /* Each reading level has its own visible location and color. */
+.library-tabs{display:flex;gap:7px;flex-shrink:0}.library-tabs a{padding:10px 13px;border-radius:9px;border:1px solid var(--stage-accent);text-decoration:none;background:#fff;color:var(--stage-ink);font-size:14px;white-space:nowrap}.library-tabs a[aria-current]{background:var(--stage-accent);color:#fff;font-weight:750}@media(max-width:650px){header{flex-wrap:wrap}.library-tabs{width:100%}.library-tabs a{flex:1;text-align:center}}
 body{--stage-accent:#8b6117;--stage-ink:#573c10;--stage-soft:#fff0bd;--stage-bg:#fffaf0;background:var(--stage-bg);transition:background-color .18s ease}
 body[data-screen=volume]{--stage-accent:#25766b;--stage-ink:#164f47;--stage-soft:#d7eee6;--stage-bg:#edf6f1}
 body[data-screen=part]{--stage-accent:#6b589c;--stage-ink:#49396e;--stage-soft:#e8dff7;--stage-bg:#f5f1fa}
