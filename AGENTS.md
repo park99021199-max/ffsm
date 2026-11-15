@@ -14,3 +14,5 @@ The index embeds the active DATA object. chapters.json holds editable narrative 
 Validate all 30 current lesson IDs and JavaScript syntax. Preview representative chapters, questions, route changes and progress persistence. Commit to main only with expected-head protection, then verify the Pages deployment. Do not claim that chat messages synchronize automatically; changes require an actual repository update and deployment.
 
 Use primary medical and classification references. Separate diagnosis, treatment and insurance contract conditions. Cases are fictional educational examples, not promises of payment.
+
+For mobile or new-chat continuation, read AUTHORING_STATUS.md for the current writing position and unresolved source-image work. Recheck live repository state before editing.
