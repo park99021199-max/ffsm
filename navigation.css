@@ -1,0 +1,39 @@
+/* Each reading level has its own visible location and color. */
+body{--stage-accent:#8b6117;--stage-ink:#573c10;--stage-soft:#fff0bd;--stage-bg:#fffaf0;background:var(--stage-bg);transition:background-color .18s ease}
+body[data-screen=volume]{--stage-accent:#25766b;--stage-ink:#164f47;--stage-soft:#d7eee6;--stage-bg:#edf6f1}
+body[data-screen=part]{--stage-accent:#6b589c;--stage-ink:#49396e;--stage-soft:#e8dff7;--stage-bg:#f5f1fa}
+body[data-screen=chapter]{--stage-accent:#356c9b;--stage-ink:#244c70;--stage-soft:#dcecf8;--stage-bg:#eef5fb}
+header{background:var(--stage-soft);border-bottom:3px solid var(--stage-accent)}
+nav.crumb{gap:8px;margin-bottom:16px;padding:12px 14px;background:#ffffffd9;border:1px solid #deded5;border-radius:12px;color:#5d625e}
+nav.crumb button{padding:6px 10px;text-decoration:underline;text-underline-offset:4px;border-radius:7px}
+nav.crumb button[aria-current=page]{background:var(--stage-accent);color:#fff;font-weight:750;text-decoration:none}
+.screen-state{border-radius:18px;overflow:hidden;background:#fff;border:1px solid #d5dcd8;margin-bottom:26px;box-shadow:0 6px 20px #243c2b09}
+.screen-state:focus{outline:none}
+.screen-location{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:20px 24px;background:var(--stage-accent);color:#fff}
+.screen-kicker{font-size:12px;font-weight:650;letter-spacing:.07em;opacity:.9;margin:0 0 4px}
+.screen-title{font-size:25px;font-weight:850;line-height:1.4;margin:0;color:#fff;letter-spacing:-.4px}
+.screen-back{flex-shrink:0;color:#fff;background:#ffffff18;border:1px solid #ffffff90;border-radius:9px;padding:10px 14px;font-size:14px}
+.screen-back:hover{background:#ffffff30}
+.screen-steps{list-style:none;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:0;padding:16px 24px}
+.screen-steps li{display:flex;gap:8px;align-items:center;color:#777e79;font-size:13px}
+.screen-steps .step-number{display:inline-flex;align-items:center;justify-content:center;border:1px solid #d5dcd8;border-radius:50%;width:26px;height:26px;font-size:12px;flex:none;background:#f6f7f5}
+.screen-steps li.active{color:var(--stage-ink);font-weight:800}
+.screen-steps li.active .step-number{background:var(--stage-accent);border-color:var(--stage-accent);color:#fff;box-shadow:0 0 0 4px var(--stage-soft)}
+.screen-steps li.complete .step-number{background:var(--stage-soft);border-color:var(--stage-soft);color:var(--stage-ink)}
+.screen-help{padding:0 24px 16px;margin:0;font-size:14px;color:#59615b}
+.hero{background:#ffffffd9;border-color:#d7ded7;border-left:6px solid var(--stage-accent)}
+.tile{position:relative;border:2px solid #d9dfd8;box-shadow:0 3px 0 #d6ddd4;padding-bottom:48px;transition:transform .12s,border-color .12s,box-shadow .12s}
+.tile::after{content:'들어가기 →';position:absolute;right:18px;bottom:14px;color:var(--stage-accent);font-size:13px;font-weight:800}
+.tile:hover,.row:hover{border-color:var(--stage-accent);box-shadow:0 6px 18px #20362515;background:#fff}
+.tile:active,.row:active,.btn:active{transform:translateY(2px);box-shadow:none;background:var(--stage-soft)}
+.tile strong{color:var(--stage-ink)}
+.tile[data-pending=true]{background:#f7f8f5;border-color:#e0e2dc;box-shadow:none}
+.tile[data-pending=true]::after{content:'목차 확인 →';color:#71796f}
+.row{border:2px solid #d9dfd8;border-left:5px solid var(--stage-accent);box-shadow:0 2px 0 #d6ddd4}
+.row::after{content:'읽기 →';font-weight:800;font-size:13px;color:var(--stage-accent);white-space:nowrap}
+.btn.primary{background:var(--stage-accent);border-color:var(--stage-accent)}
+.eyebrow{color:var(--stage-accent)}
+button:focus-visible,a:focus-visible,input:focus-visible{outline-color:var(--stage-accent)}
+@media(max-width:650px){.screen-location{padding:18px 16px;align-items:flex-start}.screen-title{font-size:21px}.screen-back{font-size:12px;padding:9px 10px}.screen-steps{padding:16px;gap:7px}.screen-steps li{flex-direction:column;align-items:flex-start;gap:7px;font-size:12px}.screen-help{padding:0 16px 16px;font-size:13px}.tile{min-height:168px;padding-bottom:46px}.row{position:relative;padding-right:72px}.row::after{position:absolute;right:13px;top:18px}.screen-state{margin-bottom:22px}.crumb{font-size:12px!important}}
+@media(prefers-reduced-motion:reduce){body,.tile{transition:none}}
+@media print{.screen-state{display:none!important}body{background:#fff}header{display:none}}
