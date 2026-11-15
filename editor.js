@@ -35,7 +35,7 @@ async function waitDeployment(sha,expected){
   try{const res=await fetch(API+'/actions/runs?head_sha='+encodeURIComponent(sha)+'&per_page=5');if(!res.ok)continue;const runs=await res.json(),run=runs.workflow_runs?.find(r=>r.name==='pages build and deployment');
    if(run?.conclusion&&run.conclusion!=='success')throw Error('수정 내용은 저장됐지만 사이트 배포가 완료되지 않았습니다. 배포 상태 확인에서 오류를 확인해 주세요.');
    const page=await fetch('./index.html?published='+sha,{cache:'no-store'});if(!page.ok)continue;
-   if(fingerprint(parseIndex(await page.text()).data,id)===JSON.stringify(expected)){message($('publish-status'),'게시 완료! 기존 교재 링크에 수정 내용이 반영됐습니다.');link.href=SITE+'#'+id.replaceAll('-','/');link.textContent='업데이트된 교재 열기';return;}
+   if(fingerprint(parseIndex(await page.text()).data,id)===JSON.stringify(expected)){message($('publish-status'),'게시 완료! 기존 교재 링크에 수정 내용이 반영됐습니다.');link.href=SITE+'#'+id.replaceAll('-','/');link.textContent='업데이트된 교재 열기';if(parent!==window)parent.postMessage({type:'ffsm-images-published',id},location.origin);return;}
   }catch(e){if(e.message.startsWith('수정 내용은'))throw e;}
  }
  message($('publish-status'),'GitHub에 저장했습니다. 사이트 배포 확인이 지연되고 있습니다. 아래 배포 상태에서 확인해 주세요.');
@@ -47,4 +47,13 @@ $('editor').onsubmit=async e=>{e.preventDefault();if(publishing)return;let d;try
 };
 addEventListener('beforeunload',e=>{if(dirty||publishing){e.preventDefault();e.returnValue='';}});
 async function init(){try{const res=await fetch('./index.html',{cache:'no-store'});if(!res.ok)throw Error('교재를 불러오지 못했습니다. 잠시 후 새로고침해 주세요.');data=parseIndex(await res.text()).data;$('chapter').replaceChildren();for(const key of Object.keys(data.lessons).sort()){const [v,p,c]=key.split('-');const option=node('option',`제${v}권 제${p}부 제${c}장 · ${data.chapters[key][0]}`);option.value=key;$('chapter').append(option);}$('chapter').disabled=false;let selected=location.hash.slice(1).replaceAll('/','-');if(!data.lessons[selected])selected=$('chapter').value;await select(selected);}catch(e){message($('status'),e.message,true);}}
+
+const imagesOnly=new URLSearchParams(location.search).get('images')==='1';
+function imageMode(){if(!imagesOnly)return;document.body.classList.add('images-only');$('title').closest('section').hidden=true;$('sections').closest('section').hidden=true;$('question').closest('section').hidden=true;$('original-panel').hidden=true;$('chapter').disabled=true;document.querySelector('.intro h1').textContent=value?.title||'이 장 이미지 편집';document.querySelector('.intro>p:last-child').textContent='이미지를 교체하거나 여러 개 추가할 수 있습니다. 공유 교재에 게시하면 본문과 모아보기에 함께 반영됩니다.';}
+const renderBeforeImages=render;render=function(){renderBeforeImages();imageMode();};
+let replacementIndex;
+const replacementInput=node('input');replacementInput.type='file';replacementInput.accept='image/jpeg,image/png,image/webp';replacementInput.hidden=true;replacementInput.id='replace-image-input';$('editor').append(replacementInput);
+const renderImageCards=renderImages;renderImages=function(){renderImageCards();[...$('images').querySelectorAll('.image-card')].forEach((card,i)=>{const replace=action('다른 이미지로 교체',()=>{replacementIndex=i;replacementInput.click();});replace.setAttribute('aria-label','이미지 '+(i+1)+' 교체');card.append(replace);});imageMode();};
+replacementInput.onchange=async()=>{try{const file=replacementInput.files[0];if(!file)return;if(!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>8*1024*1024)throw Error('8MB 이하의 JPG, PNG, WebP 이미지를 선택해 주세요.');const bitmap=await createImageBitmap(file);const tooBig=bitmap.width*bitmap.height>40000000;bitmap.close();if(tooBig)throw Error('이미지 해상도를 4천만 화소 이하로 줄여 주세요.');const url=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=()=>reject(Error('이미지를 읽을 수 없습니다.'));reader.readAsDataURL(file);});if(replacementIndex>=value.images.length)throw Error('교체할 이미지를 다시 선택해 주세요.');value.images[replacementIndex]=url;renderImages();changed();message($('image-status'),'이미지를 교체했습니다. 게시하면 본문과 모아보기에 함께 반영됩니다.');}catch(e){message($('image-status'),e.message,true);}replacementInput.value='';};
+addEventListener('message',async e=>{if(parent===window||e.source!==parent||e.origin!==location.origin||e.data?.type!=='ffsm-save-before-close')return;if(publishing){parent.postMessage({type:'ffsm-editor-busy'},location.origin);return;}try{clearTimeout(timer);if(id&&dirty)await save(true);parent.postMessage({type:'ffsm-editor-saved'},location.origin);}catch{parent.postMessage({type:'ffsm-editor-save-error'},location.origin);}});
 init();
